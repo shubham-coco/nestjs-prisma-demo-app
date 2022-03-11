@@ -11,3 +11,10 @@ model users {
   id        Int            @id @default(autoincrement())
   name      String
 }
+
+model Book {
+  id  Int @default(autoincrement()) @id
+  title String
+  author String
+  publishYear Int
+}
