@@ -13,7 +13,7 @@ services:
       - .env
   postgres:
     image: postgres:13
-    container_name: postgres
+    container_name: egghead_postgres
     restart: always
     ports:
       - 5432:5432
