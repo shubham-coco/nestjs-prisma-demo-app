@@ -1,42 +1,33 @@
-import {Test, TestingModule } from '@nestjs/testing';
-import { BookController } from './book.controller';
-import { BookService } from './book.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { BookService } from "./book.service";
+import { PrismaService } from "./prisma.service";
 
-describe('BookController', () => {
-    let bookController: BookController;
+describe('BookService', () => {
     let bookService: BookService;
+    let prismaService: PrismaService;
 
-    const book ={
+    const bookDto ={
         id:123,
         title : "mock titile",
         author : "mock author",
         publishYear : 2001 
     }
-    const mockBookService ={
-        getBook : jest.fn(id =>
-          book
-        )
+    const mockPrismaService ={
+        //prisma.book.findUnique = jest.fn().mockImplementation((id)=>Promise.resolve(bookDto));
     };
   
     beforeEach(async () => {
       const app: TestingModule = await Test.createTestingModule({
-        controllers: [BookController],
-        providers: [BookService],
-      }).overrideProvider(BookService).useValue(mockBookService).compile();
-      //}).compile();
+        providers: [BookService, PrismaService],
+      //}).overrideProvider(PrismaService).useValue(mockPrismaService).compile();
+      }).compile();
   
-      bookController = app.get<BookController>(BookController);
       bookService = app.get<BookService>(BookService);
+      prismaService = app.get<PrismaService>(PrismaService);
     });
-      it('should just run', () => {
-        const result =['test'];
-          bookController.getBookById = jest.fn().mockReturnValueOnce(result);
-        expect(bookController.getBookById("hello")).toBe(result);
-      });
 
       it('should return book', async () => {
-        //jest.spyOn(bookService, "getBook").mockResolvedValue(book);
-        expect(await bookController.getBookById("123")).toEqual(book);
-        expect(mockBookService.getBook).toHaveBeenCalledWith({id:123});
+        prismaService.book.findUnique = jest.fn().mockReturnValueOnce(bookDto);
+        expect(await bookService.getBook({id:123})).toBe(bookDto);
       });
   });
