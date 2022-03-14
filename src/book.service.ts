@@ -13,6 +13,10 @@ export class BookService {
         })
     }
 
+    async getAllBooks(): Promise<Book[]> {
+        return this.prismaService.book.findMany();
+    }
+
     async createBook(data: Prisma.BookCreateInput): Promise<Book> {
         return this.prismaService.book.create({
             data,
